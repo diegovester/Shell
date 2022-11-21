@@ -45,31 +45,7 @@
 
 #define MAX_COMMAND_SIZE 255    // The maximum command-line size
 
-#define MAX_NUM_ARGUMENTS 5     // Mav shell only supports four arguments
-
-//ls command
-int listFiles(){
-  pid_t pid = fork( );
-
-  if( pid == 0 )
-  {
-    // Notice you can add as many NULLs on the end as you want
-    //use execvp
-    // 
-    int ret = execl( "/bin/ls", "ls", "-a", "-l", "-t", NULL, NULL, NULL, NULL );  
-  
-    if( ret == -1 )
-    {
-      perror("execl failed: ");
-    }
-  }
-  else 
-  {
-    int status;
-    wait( & status );
-  }
-  return 0;
-}
+#define MAX_NUM_ARGUMENTS 10     // Mav shell only supports four arguments
 
 
 int main()
@@ -116,14 +92,58 @@ int main()
       }
         token_count++;
     }
+    //printf("token_count = %d", token_count);
 
     // Now print the tokenized input as a debug check
     // \TODO Remove this code and replace with your shell functionality
     
+    /*
     int token_index  = 0;
     for( token_index = 0; token_index < token_count; token_index ++ ) 
     {
       printf("token[%d] = %s\n", token_index, token[token_index] );  
+    }
+    */
+    
+    
+    int token_index  = 0;
+    pid_t pid = fork( );
+    if( pid == 0 )
+    {
+      
+      // REQUIREMENT 7
+      // Shall support up to 10 command line parameters
+      // in addition to the command
+      char *arguments[token_count];
+      
+      for( token_index = 0; token_index < token_count; token_index ++ ) 
+      {
+        //printf("token[%d] = %s\n", token_index, token[token_index] );
+        
+        arguments[token_index] = ( char * ) malloc( strlen( token[token_index] ) );
+
+        // char *strncpy(char *dest, const char *src, size_t n)
+        // dest − This is the pointer to the destination array where the content is to be copied.
+        // src − This is the string to be copied
+        // n − The number of characters to be copied from source.
+        strncpy( arguments[token_index], token[token_index], strlen( token[token_index] ) );
+      }
+      
+
+      //arguments[2] = NULL;
+
+      // Notice you can add as many NULLs on the end as you want
+      //replace arguments with token
+      int ret = execvp( arguments[0], &arguments[0] );  
+      if( ret == -1 )
+      {
+        perror("execl failed: ");
+      }
+    }
+    else 
+    {
+      int status;
+      wait( & status );
     }
       
 /*****REQUIREMENT 2 ********/
@@ -328,3 +348,4 @@ int main()
   return 0;
   // e2520ca2-76f3-90d6-0242ac120003
 }
+
