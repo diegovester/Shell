@@ -47,7 +47,10 @@
 
 #define MAX_NUM_ARGUMENTS 4     // Mav shell only supports four arguments 
 
+#define MAX_PID_SIZE 20         // Mav shell is able to print up to 20 previous PIDs
+
 int run = 1;
+int pid_count = 0;
 
 int main()
 {
@@ -106,10 +109,13 @@ int main()
     }
     */
     
-    int token_index  = 0;
+    int pid_array[20];
+
     char *str_cd = "cd";
     char *str_quit = "quit";
     char *str_exit = "exit";
+    char *str_listpids = "listpids";
+    int i;
     
     if(token[0] != NULL)
     {
@@ -120,20 +126,37 @@ int main()
         exit(0);
       }
     }
-
+    int child_pid = getpid();
     pid_t pid = fork( );
     if( pid == 0 && token[0] != NULL )
     {
+      
+      
+      
       // Notice you can add as many NULLs on the end as you want
       // replace arguments with token
       int ret = execvp( token[0], &token[0] );  
       if( ret == -1 )
       {
         int result_cd = strcmp(token[0], str_cd);
+        int result_listpids = strcmp(token[0], str_listpids);
         if(result_cd == 0)
         {
           chdir(token[1]);
+          pid_array[pid_count] = child_pid;
+          pid_count ++;
         } 
+        else if(result_listpids == 0)
+        {
+          
+          printf("Previous PIDs (%d):\n", pid_count);
+          for(i = 0; i < pid_count; i++)
+          {
+            printf("%d\n", pid_array[i]);
+          }
+          pid_array[pid_count] = child_pid;
+          pid_count ++;
+        }
         else
         {
           printf("%s : Command not found. \n", token[0]);
@@ -142,6 +165,8 @@ int main()
     }
     else 
     {
+      pid_array[pid_count] = child_pid;
+      pid_count ++;
       int status;
       wait( & status );
     }
@@ -151,7 +176,7 @@ int main()
   // e2520ca2-76f3-90d6-0242ac120003
 }
 
-// REQUIREMENTS COMPLETE: 9/18
+// REQUIREMENTS COMPLETE: 10/18
 
 /*COMPLETE****REQUIREMENT 1 ********/
       // Your program will print out a prompt of msh> when it is ready to 
@@ -258,7 +283,7 @@ as                                  json_pp                     slogin
       Your shell must handle cd ..
       */
 
-/*****REQUIREMENT 11 ********/
+/*COMPLETE****REQUIREMENT 11 ********/
       /*
       Your shell shall support the listpids command to list the PIDs of the last 20 processes spawned by your shell.
       If there have been less than 20 processes spawned
