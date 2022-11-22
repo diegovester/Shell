@@ -110,7 +110,7 @@ int main()
     char *str_cd = "cd";
     char *str_quit = "quit";
     char *str_exit = "exit";
-    pid_t pid = fork( );
+    
     if(token[0] != NULL)
     {
       int result_quit = strcmp(token[0], str_quit);
@@ -119,12 +119,9 @@ int main()
       {
         exit(0);
       }
-
-      
-      
     }
 
-    
+    pid_t pid = fork( );
     if( pid == 0 && token[0] != NULL )
     {
       // Notice you can add as many NULLs on the end as you want
