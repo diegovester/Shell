@@ -143,7 +143,7 @@ int main()
   // e2520ca2-76f3-90d6-0242ac120003
 }
 
-// REQUIREMENTS COMPLETE: 2/18
+// REQUIREMENTS COMPLETE: 8/18
 
 /*COMPLETE****REQUIREMENT 1 ********/
       // Your program will print out a prompt of msh> when it is ready to 
@@ -170,12 +170,12 @@ int main()
       // quietly and with no other output
       // print another prompt and accept a new line of input
 
-/*****REQUIREMENT 7 ********/
+/*COMPLETE****REQUIREMENT 7 ********/
       // Your version of Mav shell shall support 
       // up to 10 command line parameters in addition to the command
 
 
-/*****REQUIREMENT 8 ********/
+/*COMPLETE****REQUIREMENT 8 ********/
     /*Your shell shall support and execute any command entered
       Any comand in 
            /bin
@@ -194,7 +194,50 @@ int main()
         ps -a -e -f
       */
 
-/*****REQUIREMENT 9 ********/
+     /*
+/bin dir     
+bash           fuser       mountpoint     sleep                           umount
+cat            grep        mv             ss                              uname
+chgrp          gunzip      nano           stty                            uncompress
+chmod          gzexe       networkctl     su                              vdir
+chown          gzip        nisdomainname  sync                            wdctl
+cp             hostname    pidof          systemctl                       ypdomainname
+dash           ip          ping           systemd                         zcat
+date           journalctl  ping4          systemd-ask-password            zcmp
+dd             kill        ping6          systemd-escape                  zdiff
+df             ln          ps             systemd-inhibit                 zegrep
+dir            login       pwd            systemd-machine-id-setup        zfgrep
+dmesg          loginctl    rbash          systemd-notify                  zforce
+dnsdomainname  ls          readlink       systemd-sysusers                zgrep
+domainname     lsblk       rm             systemd-tmpfiles                zless
+echo           mkdir       rmdir          systemd-tty-ask-password-agent  zmore
+egrep          mknod       rnano          tar                             znew
+false          mktemp      run-parts      tempfile
+fgrep          more        sed            touch
+findmnt        mount       sh             true
+     */
+
+/*
+usr/bin dir
+addpart                             id                          sha1sum
+addr2line                           infocmp                     sha224sum
+apt                                 infotocap                   sha256sum
+apt-cache                           install                     sha384sum
+apt-cdrom                           instmodsh                   sha512sum
+apt-config                          ionice                      shasum
+apt-get                             ipcmk                       shred
+apt-key                             ipcrm                       shuf
+apt-mark                            ipcs                        size
+ar                                  ischroot                    skill
+arch                                join                        slabtop
+as                                  json_pp                     slogin
+*/
+
+/*
+
+*/
+
+/*COMPLETE****REQUIREMENT 9 ********/
       /*
       Mav shell shall be implemented using fork(), wait() and one of the exec family of functions
       Your mav shell shall not use system().
