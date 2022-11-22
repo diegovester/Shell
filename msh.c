@@ -109,12 +109,16 @@ int main()
     int token_index  = 0;
     char *str_quit = "quit";
     char *str_exit = "exit";
-    int result_quit = strcmp(token[0], str_quit);
-    int result_exit = strcmp(token[0], str_exit);
-    if( result_quit == 0 || result_exit == 0)
+    if(token[0] != NULL)
     {
-      exit(0);
+      int result_quit = strcmp(token[0], str_quit);
+      int result_exit = strcmp(token[0], str_exit);
+      if( result_quit == 0 || result_exit == 0)
+      {
+        exit(0);
+      }
     }
+    
     pid_t pid = fork( );
     if( pid == 0 )
     {
@@ -161,7 +165,7 @@ int main()
       // Your shell will exit with status zero 
       // if the command is "quit" or "exit"
 
-/*****REQUIREMENT 6 ********/
+/*COMPLETE****REQUIREMENT 6 ********/
       // If the user types a blank line, your shell will
       // quietly and with no other output
       // print another prompt and accept a new line of input
