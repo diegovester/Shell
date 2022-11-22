@@ -45,7 +45,7 @@
 
 #define MAX_COMMAND_SIZE 255    // The maximum command-line size
 
-#define MAX_NUM_ARGUMENTS 10     // Mav shell only supports four arguments
+#define MAX_NUM_ARGUMENTS 10     // Mav shell only supports four arguments //REQUIREMENT 7 says 10
 
 
 int main()
@@ -108,33 +108,15 @@ int main()
     
     int token_index  = 0;
     pid_t pid = fork( );
+    printf("pid = %d\n", pid);
     if( pid == 0 )
     {
       
-      // REQUIREMENT 7
-      // Shall support up to 10 command line parameters
-      // in addition to the command
-      char *arguments[token_count];
       
-      for( token_index = 0; token_index < token_count; token_index ++ ) 
-      {
-        //printf("token[%d] = %s\n", token_index, token[token_index] );
-        
-        arguments[token_index] = ( char * ) malloc( strlen( token[token_index] ) );
-
-        // char *strncpy(char *dest, const char *src, size_t n)
-        // dest − This is the pointer to the destination array where the content is to be copied.
-        // src − This is the string to be copied
-        // n − The number of characters to be copied from source.
-        strncpy( arguments[token_index], token[token_index], strlen( token[token_index] ) );
-      }
-      
-
-      //arguments[2] = NULL;
-
+    
       // Notice you can add as many NULLs on the end as you want
       //replace arguments with token
-      int ret = execvp( arguments[0], &arguments[0] );  
+      int ret = execvp( token[0], &token[0] );  
       if( ret == -1 )
       {
         perror("execl failed: ");
@@ -183,7 +165,6 @@ int main()
         2. /usr/local/bin
         3. /usr/bin
         4. /bin
-
         Parameters may also be combined.
         For example, ps may be executed as:
         ps -aef
@@ -218,7 +199,6 @@ int main()
       If the nth command does not exist 
         then your shell will state "Command not in history".
       The output shall be a list of numbers 1 through n and their commands, each on a separate line, single spaced.
-
       If there are less than 15 commands in the history 
         only list the commands the user has entered up to that point
       */
@@ -256,20 +236,16 @@ int main()
         
         // Set working_str equal to strdup return
         char *working_str = strdup( cmd_str );
-
         // Set working_root equal to working_str
         char *working_root = working_str;
-
       The following explains the intent:
         // Save a copy of the command line since strsep
         // will end up moving the pointer head
         char *working_str = strdup( cmd_str );
-
         // we are going to move the working_str pointer so
         // keep track of its original value so we can deallocate
         // the correct amount at the end
         char *working_root = working_str;
-
       When in doubt, over comment your code.
       */
 
@@ -288,7 +264,6 @@ int main()
         any parameters expected
         any return values
         a description of what the function does
-
       */
 
   /*****REQUIREMENT 20 ********/
@@ -321,23 +296,17 @@ int main()
         strcmp
         wait
         pause
-
       Use fork and one of the exec family to execute the command and
       call wait to wait for the child to complete
-
       If the command is "cd"
         then use chdir() instead of exec
       
       chdir() must be called from the parent
-
       If you see garbage in any of your commands or parents,
         try using the functions memset() or bzero() to clear out your input string and token array
         before and/or after you are done using them.
       Verify you are NULL terminating your strings.
-
       There are examples that show how to use execl and execvp
-
-
       */
       
     
@@ -348,4 +317,3 @@ int main()
   return 0;
   // e2520ca2-76f3-90d6-0242ac120003
 }
-
