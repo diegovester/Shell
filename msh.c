@@ -45,16 +45,18 @@
 
 #define MAX_COMMAND_SIZE 255    // The maximum command-line size
 
-#define MAX_NUM_ARGUMENTS 10     // Mav shell only supports four arguments //REQUIREMENT 7 says 10
+#define MAX_NUM_ARGUMENTS 4     // Mav shell only supports four arguments 
 
+int run = 1;
 
 int main()
 {
 
   char * command_string = (char*) malloc( MAX_COMMAND_SIZE );
-
-  while( 1 )
+  
+  while( run )
   {
+    
     // Print out the msh prompt
     printf ("msh> ");
 
@@ -92,7 +94,6 @@ int main()
       }
         token_count++;
     }
-    //printf("token_count = %d", token_count);
 
     // Now print the tokenized input as a debug check
     // \TODO Remove this code and replace with your shell functionality
@@ -105,21 +106,26 @@ int main()
     }
     */
     
-    
     int token_index  = 0;
+    char *str_quit = "quit";
+    char *str_exit = "exit";
+    int result_quit = strcmp(token[0], str_quit);
+    int result_exit = strcmp(token[0], str_exit);
+    if( result_quit == 0 || result_exit == 0)
+    {
+      exit(0);
+    }
     pid_t pid = fork( );
-    printf("pid = %d\n", pid);
     if( pid == 0 )
     {
-      
-      
-    
       // Notice you can add as many NULLs on the end as you want
-      //replace arguments with token
+      // replace arguments with token
       int ret = execvp( token[0], &token[0] );  
+
+      
       if( ret == -1 )
       {
-        perror("execl failed: ");
+        printf("%s : Command not found. \n", token[0]);
       }
     }
     else 
@@ -127,18 +133,31 @@ int main()
       int status;
       wait( & status );
     }
+    free( head_ptr );
+  }
+  return 0;
+  // e2520ca2-76f3-90d6-0242ac120003
+}
+
+// REQUIREMENTS COMPLETE: 2/18
+
+/*COMPLETE****REQUIREMENT 1 ********/
+      // Your program will print out a prompt of msh> when it is ready to 
+      // accept input. It must read a line of input and, if the command given is a supported shell 
+      // command, it shall execute the command and display the output of the command
+
       
-/*****REQUIREMENT 2 ********/
+/*COMPLETE****REQUIREMENT 2 ********/
       // If the command is not supported
       // your shell shall print the invalid command 
       // follow by ": Command not found."
 
 
-/*****REQUIREMENT 4 ********/
-      // After each command completes, your porgram shall 
+/*COMPLETE****REQUIREMENT 4 ********/
+      // After each command completes, your program shall 
       // print the msh> prompt and accept another line of input
 
-/*****REQUIREMENT 5 ********/
+/*COMPLETE****REQUIREMENT 5 ********/
       // Your shell will exit with status zero 
       // if the command is "quit" or "exit"
 
@@ -310,10 +329,5 @@ int main()
       */
       
     
-    //remove?? prob not
-    free( head_ptr );
-
-  }
-  return 0;
-  // e2520ca2-76f3-90d6-0242ac120003
-}
+    
+ 
