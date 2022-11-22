@@ -107,8 +107,10 @@ int main()
     */
     
     int token_index  = 0;
+    char *str_cd = "cd";
     char *str_quit = "quit";
     char *str_exit = "exit";
+    pid_t pid = fork( );
     if(token[0] != NULL)
     {
       int result_quit = strcmp(token[0], str_quit);
@@ -117,19 +119,28 @@ int main()
       {
         exit(0);
       }
+
+      
+      
     }
+
     
-    pid_t pid = fork( );
-    if( pid == 0 )
+    if( pid == 0 && token[0] != NULL )
     {
       // Notice you can add as many NULLs on the end as you want
       // replace arguments with token
       int ret = execvp( token[0], &token[0] );  
-
-      
       if( ret == -1 )
       {
-        printf("%s : Command not found. \n", token[0]);
+        int result_cd = strcmp(token[0], str_cd);
+        if(result_cd == 0)
+        {
+          chdir(token[1]);
+        } 
+        else
+        {
+          printf("%s : Command not found. \n", token[0]);
+        }
       }
     }
     else 
@@ -143,7 +154,7 @@ int main()
   // e2520ca2-76f3-90d6-0242ac120003
 }
 
-// REQUIREMENTS COMPLETE: 8/18
+// REQUIREMENTS COMPLETE: 9/18
 
 /*COMPLETE****REQUIREMENT 1 ********/
       // Your program will print out a prompt of msh> when it is ready to 
@@ -244,7 +255,7 @@ as                                  json_pp                     slogin
       Use of system() will result in a grade of 0.
       */
 
-/*****REQUIREMENT 10 ********/
+/*COMPLETE****REQUIREMENT 10 ********/
       /*
       Your shell shall support the cd command to change the directories.
       Your shell must handle cd ..
