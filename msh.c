@@ -192,10 +192,18 @@ int main()
     char *str_quit = "quit";
     char *str_exit = "exit";
     char *str_listpids = "listpids";
+    const char split[2] = "!";
+    char *command_n;
+
+    
+
 
     
     if(token[0] != NULL)
     {
+      command_n = strtok(token[0], split);
+      //printf("command_n = %s", command_n);
+
       int result_quit = strcmp(token[0], str_quit);
       int result_exit = strcmp(token[0], str_exit);
       if( result_quit == 0 || result_exit == 0)
@@ -205,8 +213,7 @@ int main()
     }
     int child_pid;
     int parent_pid;
-    // Requirement 11 does not specify between child processes or parent processes
-    // will add both processes to the list of PIDs
+   
     pid_t pid = fork( );
     if( pid == 0 && token[0] != NULL )
     {
@@ -240,8 +247,8 @@ int main()
     }
     else 
     {
-      parent_pid = getpid();
-      insertPID(parent_pid);
+      //parent_pid = getpid();
+      //insertPID(parent_pid);
       int status;
       wait( & status );
     }
