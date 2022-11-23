@@ -49,8 +49,66 @@
 
 #define MAX_PID_SIZE 20         // Mav shell is able to print up to 20 previous PIDs
 
+#define MAX_HISTORY_SIZE 15     // Mav shell supports the history command, listing 15 commands
+
 int run = 1;
 int pid_count = 0;
+int pid_array[MAX_PID_SIZE];
+int command_array[MAX_HISTORY_SIZE];
+
+/*****REQUIREMENT 12 ********/
+      /*
+      Your shell shall support the history command which will list the last 15 commands entered by the user.
+      Typing !n, where n is a number between 0 and 14 
+        will result in your shell re-running the nth command.
+      If the nth command does not exist 
+        then your shell will state "Command not in history".
+      The output shall be a list of numbers 1 through n and their commands, each on a separate line, single spaced.
+      If there are less than 15 commands in the history 
+        only list the commands the user has entered up to that point
+      */
+
+// insertCommand() will insert the current command into an array of a size up to MAX_HISTORY_SIZE
+// if the array no longer has space, the funtion will delete the oldest command
+// and shift all commands in the array one lower index
+// then insert the most recent command on the index of MAX_HISTORY_SIZE
+// insertCommand() will return the size of the array so that it may not exceed MAX_HISTORY_SIZE
+int insertCommand(char *current_command)
+{
+
+}
+
+// insertPID will insert the current PID into an array of a size up to MAX_PID_SIZE
+// if the array no longer has space, the function will delete the oldest PID
+// and shift all PIDs in the array one lower index
+// then insert the most recent PID on the index of MAX_PID_SIZE
+// insertPID() will return the size of the array so that it may not exceed MAX_PID_SIZZE
+int insertPID(int current_PID)
+{
+  if(pid_count < MAX_PID_SIZE)
+  {
+    pid_array[pid_count] = current_PID;
+    pid_count ++;
+  }
+  else
+  {
+    for(int i = 0; i<MAX_PID_SIZE; i++)
+    {
+      pid_array[i] = pid_array[i+1];
+    }
+    pid_array[MAX_PID_SIZE] = current_PID;
+  }
+  return pid_count;
+}
+
+void printPIDs()
+{
+  printf("List of PIDs (%d)\n", pid_count);
+  for(int i = 0; i < pid_count; i++)
+  {
+    printf("%d\n", pid_array[i]);
+  }
+}
 
 int main()
 {
@@ -109,13 +167,12 @@ int main()
     }
     */
     
-    int pid_array[20];
+    
 
     char *str_cd = "cd";
     char *str_quit = "quit";
     char *str_exit = "exit";
     char *str_listpids = "listpids";
-    int i;
     
     if(token[0] != NULL)
     {
@@ -126,16 +183,22 @@ int main()
         exit(0);
       }
     }
-    int child_pid = getpid();
+    int child_pid;
+    int parent_pid;
+    // Requirement 11 does not specify between child processes or parent processes
+    // will add both processes to the list of PIDs
     pid_t pid = fork( );
     if( pid == 0 && token[0] != NULL )
     {
       
       
+      child_pid = getpid();
+      insertPID(child_pid);
       
       // Notice you can add as many NULLs on the end as you want
       // replace arguments with token
       int ret = execvp( token[0], &token[0] );  
+      
       if( ret == -1 )
       {
         int result_cd = strcmp(token[0], str_cd);
@@ -143,30 +206,21 @@ int main()
         if(result_cd == 0)
         {
           chdir(token[1]);
-          pid_array[pid_count] = child_pid;
-          pid_count ++;
         } 
         else if(result_listpids == 0)
         {
-          
-          printf("Previous PIDs (%d):\n", pid_count);
-          for(i = 0; i < pid_count; i++)
-          {
-            printf("%d\n", pid_array[i]);
-          }
-          pid_array[pid_count] = child_pid;
-          pid_count ++;
+          printPIDs();
         }
         else
         {
           printf("%s : Command not found. \n", token[0]);
         }
-      }
+      }    
     }
     else 
     {
-      pid_array[pid_count] = child_pid;
-      pid_count ++;
+      parent_pid = getpid();
+      insertPID(parent_pid);
       int status;
       wait( & status );
     }
