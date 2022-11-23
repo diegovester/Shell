@@ -54,7 +54,12 @@
 int run = 1;
 int pid_count = 0;
 int pid_array[MAX_PID_SIZE];
-int command_array[MAX_HISTORY_SIZE];
+
+int command_count = 0;
+char *command_array[MAX_HISTORY_SIZE];
+
+
+
 
 /*****REQUIREMENT 12 ********/
       /*
@@ -72,17 +77,30 @@ int command_array[MAX_HISTORY_SIZE];
 // if the array no longer has space, the funtion will delete the oldest command
 // and shift all commands in the array one lower index
 // then insert the most recent command on the index of MAX_HISTORY_SIZE
-// insertCommand() will return the size of the array so that it may not exceed MAX_HISTORY_SIZE
+// insertCommand() will return the size of the array 
 int insertCommand(char *current_command)
 {
-
+  if(command_count < MAX_HISTORY_SIZE)
+  {
+    command_array[command_count] = current_command;
+    command_count ++;
+  }
+  else
+  {
+    for(int i = 0; i < MAX_HISTORY_SIZE; i++)
+    {
+      command_array[i] = command_array[i+1];
+    }
+    command_array[MAX_HISTORY_SIZE-1] = current_command;
+  }
+  return command_count;
 }
 
 // insertPID will insert the current PID into an array of a size up to MAX_PID_SIZE
 // if the array no longer has space, the function will delete the oldest PID
 // and shift all PIDs in the array one lower index
 // then insert the most recent PID on the index of MAX_PID_SIZE
-// insertPID() will return the size of the array so that it may not exceed MAX_PID_SIZZE
+// insertPID() will return the size of the array
 int insertPID(int current_PID)
 {
   if(pid_count < MAX_PID_SIZE)
@@ -96,7 +114,8 @@ int insertPID(int current_PID)
     {
       pid_array[i] = pid_array[i+1];
     }
-    pid_array[MAX_PID_SIZE] = current_PID;
+    
+    pid_array[MAX_PID_SIZE-1] = current_PID;
   }
   return pid_count;
 }
@@ -173,6 +192,7 @@ int main()
     char *str_quit = "quit";
     char *str_exit = "exit";
     char *str_listpids = "listpids";
+
     
     if(token[0] != NULL)
     {
@@ -193,6 +213,7 @@ int main()
       
       
       child_pid = getpid();
+      insertCommand(token[0]);
       insertPID(child_pid);
       
       // Notice you can add as many NULLs on the end as you want
